@@ -1,0 +1,85 @@
+#!/bin/sh -e
+
+#
+# Init
+# ----
+#
+
+pc() {
+    echo -e "\033[1;33m$@\033[0m"
+}
+
+p() {
+    pc "$@"
+    "$@"
+}
+
+pl() {
+    pc "$@"
+    echo
+    "$@"
+    echo
+}
+
+p mkdir tox
+TOXDIR=$(pwd)/tox
+
+#
+# `libsodium`
+# -----------
+#
+
+p cd "$TOXDIR"
+pl git clone https://github.com/jedisct1/libsodium.git
+p cd libsodium
+
+pl ./autogen.sh
+pl ./configure
+pl make
+pl make install DESTDIR="$TOXDIR"
+
+#
+# `toxcore`
+# ---------
+#
+
+p cd "$TOXDIR"
+pl git clone https://github.com/irungentoo/toxcore.git
+p cd toxcore
+
+pl ./autogen.sh
+
+pl ./configure \
+    --with-libsodium-headers="$TOXDIR/usr/local/include" \
+    --with-libsodium-libs="$TOXDIR/usr/local/lib"
+
+pl make
+pl make install DESTDIR="$TOXDIR"
+
+#
+# Toxic
+# -----
+#
+
+p cd "$TOXDIR"
+pl git clone https://github.com/Tox/toxic.git
+p cd toxic/build
+
+p sed -i '72,85d' Makefile
+
+TOXIC_LDLIBS="-lncurses -ltoxcore -ltoxdns -lsodium"
+
+pl make \
+    USER_CFLAGS="-I$TOXDIR/usr/local/include" \
+    USER_LDFLAGS="-L$TOXDIR/usr/local/lib $TOXIC_LDLIBS"
+
+#
+# End
+# ---
+#
+
+echo -e '\033[32mSeems everything went successfully!\033[0m'
+echo
+echo 'You should add this to your profile for the software to work:'
+echo
+echo "    export LD_LIBRARY_PATH=\"$TOXDIR/usr/local/lib:\$LD_LIBRARY_PATH\""
