@@ -79,22 +79,29 @@ pl git clone https://github.com/Tox/toxic.git
 p cd toxic/build
 
 #
-# This will remove a broken check in the makefile that will always fail
-# when linking locally installed dependencies.
-#
-# TODO: This will break if the makefile is modified, write a better
-# deletion command.
-#
-p sed -i '72,85d' Makefile
-
-#
 # Libraries needed by the software. Normally the makefile add them if
 # it can find the globally-installed libraries, but we need to set them
 # manually for a local installation.
 #
-TOXIC_LDLIBS="-lncursesw -ltoxcore -ltoxdns"
+TOXIC_LDLIBS='-lncursesw -ltoxcore -ltoxdns'
+
+#
+# Actually the makefile will use `pkg-config $(LIBS)` to figure which
+# flags to give to the linker. This won't work for a local install.
+#
+# I used to remove the library check code in the makefile, but I found this
+# hack that don't require to alter the makefile; by overriding `LIBS` to
+# contain `--version`, the command will be `pkg-config --version` which will
+# not return an error code (so the makefile will think all libs were found).
+#
+# After, it is used like this `pkg-config --cflags $(LIBS)`, so
+# `pkg-config --cflags --version`. The command will fail and leave an
+# empty standard output (so nothing will be added to `CFLAGS` nor `LDFLAGS`.
+#
+TOXIC_LIBS='--version'
 
 pl make \
+    LIBS="$TOXIC_LIBS" \
     USER_CFLAGS="-I$TOXDIR/usr/local/include" \
     USER_LDFLAGS="-L$TOXDIR/usr/local/lib $TOXIC_LDLIBS"
 
