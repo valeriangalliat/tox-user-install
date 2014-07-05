@@ -84,4 +84,4 @@ echo 'You should add this to your profile for the software to work:'
 echo
 echo "    export LD_LIBRARY_PATH=\"$TOXDIR/usr/local/lib:\$LD_LIBRARY_PATH\""
 echo
-echo '... or use the helper script in the readme to launch `toxic`.
+echo '... or use the helper script in the readme to launch `toxic`.'
