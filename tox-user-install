@@ -2,18 +2,31 @@
 
 #
 # Init
-# ----
+# ====
 #
 
+#
+# Print all arguments in yellow.
+#
 pc() {
     echo -e "\033[1;33m$@\033[0m"
 }
 
+#
+# Call `pc` and execute command with arguments.
+#
+# This will print `touch test` in yellow and touch the file `test`.
+#
+#     p touch test
+#
 p() {
     pc "$@"
     "$@"
 }
 
+#
+# Like `pc` but skip a line before and after command execution.
+#
 pl() {
     pc "$@"
     echo
@@ -26,7 +39,7 @@ TOXDIR=$(pwd)/tox
 
 #
 # `libsodium`
-# -----------
+# ===========
 #
 
 p cd "$TOXDIR"
@@ -40,7 +53,7 @@ pl make install DESTDIR="$TOXDIR"
 
 #
 # `toxcore`
-# ---------
+# =========
 #
 
 p cd "$TOXDIR"
@@ -58,16 +71,28 @@ pl make install DESTDIR="$TOXDIR"
 
 #
 # Toxic
-# -----
+# =====
 #
 
 p cd "$TOXDIR"
 pl git clone https://github.com/Tox/toxic.git
 p cd toxic/build
 
+#
+# This will remove a broken check in the makefile that will always fail
+# when linking locally installed dependencies.
+#
+# TODO: This will break if the makefile is modified, write a better
+# deletion command.
+#
 p sed -i '72,85d' Makefile
 
-TOXIC_LDLIBS="-lncurses -ltoxcore -ltoxdns -lsodium"
+#
+# Libraries needed by the software. Normally the makefile add them if
+# it can find the globally-installed libraries, but we need to set them
+# manually for a local installation.
+#
+TOXIC_LDLIBS="-lncursesw -ltoxcore -ltoxdns"
 
 pl make \
     USER_CFLAGS="-I$TOXDIR/usr/local/include" \
@@ -75,7 +100,7 @@ pl make \
 
 #
 # End
-# ---
+# ===
 #
 
 echo -e '\033[32mSeems everything went successfully!\033[0m'
