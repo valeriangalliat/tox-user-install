@@ -44,6 +44,6 @@ launching it (still assuming you installed it in `~/opt`):
 ```sh
 #!/bin/sh -e
 
-export LD_LIBRARY_PATH="~/opt/tox/usr/local/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$HOME/opt/tox/usr/local/lib:$LD_LIBRARY_PATH"
 ~/opt/tox/toxic/build/toxic
 ```
