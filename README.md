@@ -36,3 +36,14 @@ is in yout `PATH`:
 mkdir -p ~/bin
 ln -s ../opt/tox/toxic/build/toxic "$_/toxic"
 ```
+
+If you don't want to define `LD_LIBRARY_PATH` in your environment, you
+can use this shell script in `~/bin/toxic` to setup the environment before
+launching it (still assuming you installed it in `~/opt`):
+
+```sh
+#!/bin/sh -e
+
+export LD_LIBRARY_PATH="~/opt/tox/usr/local/lib:$LD_LIBRARY_PATH"
+~/opt/tox/toxic/build/toxic
+```
