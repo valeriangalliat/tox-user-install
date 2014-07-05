@@ -28,3 +28,11 @@ and a `usr` directory containing the C headers and shared libraries.
 
 You'llhave to define the `LD_LIBRARY_PATH` environment variable to contain
 `~/opt/tox/usr/local/lib` to be able to launch `toxic`.
+
+Also if you want to run the `toxic` executable anywhere, assuming `~/bin`
+is in yout `PATH`:
+
+```sh
+mkdir -p ~/bin
+ln -s ../opt/tox/toxic/build/toxic "$_/toxic"
+```
