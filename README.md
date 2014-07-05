@@ -1,7 +1,7 @@
 Tox User Install
 ================
 
-Install Toxic and its dependencies as user.
+Install [Toxic](https://github.com/Tox/toxic) and its dependencies as user.
 
 Description
 -----------
