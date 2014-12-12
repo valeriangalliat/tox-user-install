@@ -1,12 +1,12 @@
-Tox User Install
+Tox user install
 ================
 
-Install [Toxic](https://github.com/Tox/toxic) and its dependencies as user.
+> Install [Toxic](https://github.com/Tox/toxic) and its dependencies as user.
 
 Description
 -----------
 
-I wanted to use `toxic` on Debian but it is not currently packaged so I had
+I wanted to use Toxic on Debian but it is not currently packaged so I had
 to compile it. I didn't want to `make install` as root since I don't think
 this is a clean solution, so I made this script to automate the installation
 with shared libraries in my home.
